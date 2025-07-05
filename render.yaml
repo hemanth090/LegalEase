@@ -1,0 +1,30 @@
+services:
+  # Backend API Service
+  - type: web
+    name: legalease-api
+    env: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GROQ_API_KEY
+        sync: false
+    
+  # Frontend Static Site
+  - type: static
+    name: legalease-frontend
+    env: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: ./client/dist
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: legalease-api
+          property: host

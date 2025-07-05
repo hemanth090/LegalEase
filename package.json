@@ -1,0 +1,33 @@
+{
+  "name": "legalease",
+  "version": "1.0.0",
+  "description": "Legal Document Simplifier - Transform complex legal documents into clear, understandable explanations",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm run dev",
+    "client:dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "keywords": [
+    "legal",
+    "document",
+    "simplifier",
+    "ai",
+    "translation",
+    "accessibility"
+  ],
+  "author": "LegalEase Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

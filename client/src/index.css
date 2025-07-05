@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Glassmorphic Cards */
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl;
+  }
+
+  .glass-card-error {
+    @apply backdrop-blur-xl bg-red-500/10 border border-red-400/30 rounded-2xl shadow-2xl;
+  }
+
+  /* Glassmorphic Buttons */
+  .glass-button {
+    @apply backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center;
+  }
+
+  .glass-button-primary {
+    @apply backdrop-blur-md bg-gradient-to-r from-blue-500/20 to-purple-600/20 hover:from-blue-500/30 hover:to-purple-600/30 border border-white/30 hover:border-white/40 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center justify-center transform hover:scale-105;
+  }
+
+  /* Legacy button styles for compatibility */
+  .btn-primary {
+    @apply glass-button-primary;
+  }
+  
+  .btn-secondary {
+    @apply glass-button;
+  }
+  
+  .card {
+    @apply glass-card p-6;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Enhanced markdown styling */
+  .markdown-content {
+    @apply text-gray-800 leading-relaxed;
+  }
+
+  /* Custom scrollbar for content areas */
+  .markdown-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .markdown-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  .markdown-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+
+  .markdown-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Glassmorphic input styles */
+  .glass-input {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all duration-300;
+  }
+
+  .glass-select {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all duration-300;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl;
+  }
+
+  /* Gradient text effects */
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent;
+  }
+
+  .gradient-text-light {
+    @apply bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-white/20 border-t-white;
+  }
+
+  /* Pulse animation for loading states */
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    from {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    to {
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  /* File upload drag states */
+  .drag-over {
+    @apply border-blue-400/50 bg-blue-500/10 scale-105;
+  }
+
+  /* Success states */
+  .success-glow {
+    @apply shadow-lg shadow-green-500/20;
+  }
+
+  /* Error states */
+  .error-glow {
+    @apply shadow-lg shadow-red-500/20;
+  }
+}
