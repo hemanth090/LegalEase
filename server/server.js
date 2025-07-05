@@ -17,7 +17,7 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://legalease-client-app.onrender.com'
+    'https://legalease-frontend-ihrt.onrender.com'
   ],
   credentials: true
 }));
