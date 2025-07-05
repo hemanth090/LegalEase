@@ -14,13 +14,12 @@ services:
         value: 10000
       - key: GROQ_API_KEY
         sync: false
-    
-  # Frontend Static Site
-  - type: static
-    name: legalease-frontend
-    env: static
+
+# Static sites are defined separately
+staticSites:
+  - name: legalease-frontend
     buildCommand: cd client && npm install && npm run build
-    staticPublishPath: ./client/dist
+    publishPath: ./client/dist
     pullRequestPreviewsEnabled: false
     envVars:
       - key: VITE_API_URL
