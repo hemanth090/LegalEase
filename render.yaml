@@ -24,4 +24,4 @@ services:
         fromService:
           type: web
           name: legalease-backend-api
-          property: host
+          property: url
