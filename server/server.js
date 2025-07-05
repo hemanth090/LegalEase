@@ -20,11 +20,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://legalease-client-app.onrender.com'
-  ],
+  origin: true, // Allow all origins for debugging
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -36,18 +32,27 @@ const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter: (req, file, cb) => {
+    console.log('🔍 File filter check:', {
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size
+    });
+    
     const allowedTypes = [
       'application/pdf',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'image/jpeg',
       'image/png',
-      'image/jpg'
+      'image/jpg',
+      'text/plain' // Add text files for testing
     ];
     
     if (allowedTypes.includes(file.mimetype)) {
+      console.log('✅ File type allowed:', file.mimetype);
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type. Only PDF, DOCX, and images are allowed.'));
+      console.log('❌ File type not allowed:', file.mimetype);
+      cb(new Error('Invalid file type. Only PDF, DOCX, images, and text files are allowed.'));
     }
   }
 });
@@ -55,12 +60,16 @@ const upload = multer({
 
 // Helper function to detect file type
 function getFileType(mimetype, filename) {
+  console.log('🔍 Detecting file type:', { mimetype, filename });
+  
   if (mimetype === 'application/pdf' || filename.endsWith('.pdf')) {
     return 'pdf';
   } else if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || filename.endsWith('.docx')) {
     return 'docx';
   } else if (mimetype.startsWith('image/')) {
     return 'image';
+  } else if (mimetype === 'text/plain' || filename.endsWith('.txt')) {
+    return 'text';
   }
   return 'unknown';
 }
@@ -160,6 +169,10 @@ app.post('/extract-text', async (req, res) => {
         break;
       case 'image':
         extractedText = await extractFromImage(fileBuffer);
+        break;
+      case 'text':
+        extractedText = fileBuffer.toString('utf-8');
+        console.log('📄 Text file content extracted, length:', extractedText.length);
         break;
       default:
         console.log('❌ Unsupported file type:', fileType);
