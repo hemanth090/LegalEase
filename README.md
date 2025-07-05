@@ -27,8 +27,8 @@ LegalEase is a powerful web application that transforms complex legal documents 
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd LegalStick
+   git clone https://github.com/hemanth090/LegalEase.git
+   cd LegalEase
    ```
 
 2. **Install server dependencies**
@@ -79,7 +79,7 @@ LegalEase is a powerful web application that transforms complex legal documents 
 ## 🏗️ Project Structure
 
 ```
-LegalStick/
+LegalEase/
 ├── client/                 # React frontend
 │   ├── public/            # Static assets
 │   │   └── favicon.svg    # App icon
