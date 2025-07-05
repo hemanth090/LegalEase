@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: legalease-api
+    name: legalease-backend-api
     env: node
     plan: free
     buildCommand: cd server && npm install
@@ -15,7 +15,7 @@ services:
         sync: false
 
   - type: web
-    name: legalease-frontend
+    name: legalease-client-app
     env: static
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: ./client/dist
@@ -23,5 +23,5 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: legalease-api
+          name: legalease-backend-api
           property: host
