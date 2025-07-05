@@ -1,5 +1,4 @@
 services:
-  # Backend API Service
   - type: web
     name: legalease-api
     env: node
@@ -15,12 +14,11 @@ services:
       - key: GROQ_API_KEY
         sync: false
 
-# Static sites are defined separately
-staticSites:
-  - name: legalease-frontend
+  - type: web
+    name: legalease-frontend
+    env: static
     buildCommand: cd client && npm install && npm run build
-    publishPath: ./client/dist
-    pullRequestPreviewsEnabled: false
+    staticPublishPath: ./client/dist
     envVars:
       - key: VITE_API_URL
         fromService:
