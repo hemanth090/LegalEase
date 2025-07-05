@@ -1,6 +1,6 @@
 # LegalEase - Legal Document Simplifier
 
-![LegalEase Logo](client/public/favicon.svg)
+
 
 LegalEase is a powerful web application that transforms complex legal documents into clear, understandable explanations in over 80+ languages. No legal expertise required!
 
