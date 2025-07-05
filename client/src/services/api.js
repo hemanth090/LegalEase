@@ -1,55 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://legalease-backend-api.onrender.com';
-
-// Debug logging
-console.log('🔍 Frontend API Configuration:');
-console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-console.log('API_BASE_URL:', API_BASE_URL);
-console.log('Environment:', import.meta.env.MODE);
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 120000, // 2 minutes timeout for file processing
 });
-
-// Add request interceptor for debugging
-api.interceptors.request.use(
-  (config) => {
-    console.log('🚀 API Request:', {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      baseURL: config.baseURL,
-      fullURL: `${config.baseURL}${config.url}`
-    });
-    return config;
-  },
-  (error) => {
-    console.error('❌ Request Error:', error);
-    return Promise.reject(error);
-  }
-);
-
-// Add response interceptor for debugging
-api.interceptors.response.use(
-  (response) => {
-    console.log('✅ API Response:', {
-      status: response.status,
-      url: response.config.url,
-      dataSize: JSON.stringify(response.data).length
-    });
-    return response;
-  },
-  (error) => {
-    console.error('❌ Response Error:', {
-      status: error.response?.status,
-      url: error.config?.url,
-      message: error.message,
-      data: error.response?.data
-    });
-    return Promise.reject(error);
-  }
-);
 
 export const processDocument = async (file, language, setCurrentStep) => {
   try {
