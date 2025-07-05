@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LegalEase API Test</title>
+</head>
+<body>
+    <h1>LegalEase API Test</h1>
+    
+    <div>
+        <h2>0. Debug API</h2>
+        <button onclick="testDebug()">Check API Status</button>
+        <button onclick="testAI()">Test AI (No Upload)</button>
+        <div id="debugResult"></div>
+    </div>
+
+    <div>
+        <h2>1. Test File Upload</h2>
+        <input type="file" id="fileInput" accept=".pdf,.docx,.jpg,.png,.txt">
+        <button onclick="testUpload()">Test Upload</button>
+        <div id="uploadResult"></div>
+    </div>
+
+    <div>
+        <h2>2. Test Text Extraction</h2>
+        <button onclick="testExtraction()">Test Extraction</button>
+        <div id="extractResult"></div>
+    </div>
+
+    <div>
+        <h2>3. Test AI Simplification</h2>
+        <button onclick="testSimplification()">Test Simplification</button>
+        <div id="simplifyResult"></div>
+    </div>
+
+    <div>
+        <h2>Debug Logs</h2>
+        <div id="logs" style="background: #f0f0f0; padding: 10px; font-family: monospace; white-space: pre-wrap;"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://legalease-backend-api.onrender.com';
+        let currentDocId = null;
+        let currentBuffer = null;
+        let currentFileType = null;
+        let extractedText = null;
+
+        function log(message) {
+            const logs = document.getElementById('logs');
+            logs.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            console.log(message);
+        }
+
+        async function testUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                log('❌ No file selected');
+                return;
+            }
+
+            log('📤 Starting upload test...');
+            log('📁 File: ' + file.name + ' (' + file.size + ' bytes)');
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                log('🌐 Making request to: ' + API_URL + '/upload');
+                
+                const response = await fetch(API_URL + '/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                log('📊 Upload response status: ' + response.status);
+                log('📊 Upload response headers: ' + JSON.stringify([...response.headers.entries()]));
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    log('❌ Error response body: ' + errorText);
+                    throw new Error('Upload failed: ' + response.status + ' - ' + errorText);
+                }
+
+                const responseText = await response.text();
+                log('📄 Raw response: ' + responseText);
+                
+                const result = JSON.parse(responseText);
+                log('✅ Upload successful!');
+                log('🆔 DocId: ' + result.docId);
+                log('📄 File type: ' + result.fileType);
+                log('💾 Buffer size: ' + (result.buffer ? result.buffer.length : 0));
+
+                // Store for next tests
+                currentDocId = result.docId;
+                currentBuffer = result.buffer;
+                currentFileType = result.fileType;
+
+                document.getElementById('uploadResult').innerHTML = 
+                    '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+
+            } catch (error) {
+                log('❌ Upload error: ' + error.message);
+                document.getElementById('uploadResult').innerHTML = 
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        async function testExtraction() {
+            if (!currentDocId || !currentBuffer || !currentFileType) {
+                log('❌ No upload data available. Upload a file first.');
+                return;
+            }
+
+            log('📝 Starting text extraction test...');
+
+            try {
+                const response = await fetch(API_URL + '/extract-text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        docId: currentDocId,
+                        buffer: currentBuffer,
+                        fileType: currentFileType
+                    })
+                });
+
+                log('📊 Extraction response status: ' + response.status);
+                
+                if (!response.ok) {
+                    throw new Error('Extraction failed: ' + response.status);
+                }
+
+                const result = await response.json();
+                log('✅ Extraction successful!');
+                log('📄 Text length: ' + (result.text ? result.text.length : 0));
+                log('📄 Text preview: ' + (result.text ? result.text.substring(0, 100) + '...' : 'No text'));
+
+                extractedText = result.text;
+
+                document.getElementById('extractResult').innerHTML = 
+                    '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+
+            } catch (error) {
+                log('❌ Extraction error: ' + error.message);
+                document.getElementById('extractResult').innerHTML = 
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        async function testSimplification() {
+            if (!extractedText) {
+                log('❌ No extracted text available. Extract text first.');
+                return;
+            }
+
+            log('🤖 Starting AI simplification test...');
+
+            try {
+                const response = await fetch(API_URL + '/simplify-text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        docId: currentDocId,
+                        text: extractedText
+                    })
+                });
+
+                log('📊 Simplification response status: ' + response.status);
+                
+                if (!response.ok) {
+                    throw new Error('Simplification failed: ' + response.status);
+                }
+
+                const result = await response.json();
+                log('✅ Simplification successful!');
+                log('📄 Simplified length: ' + (result.simplified ? result.simplified.length : 0));
+
+                document.getElementById('simplifyResult').innerHTML = 
+                    '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+
+            } catch (error) {
+                log('❌ Simplification error: ' + error.message);
+                document.getElementById('simplifyResult').innerHTML = 
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        async function testDebug() {
+            log('🔍 Testing API debug endpoint...');
+            
+            try {
+                const response = await fetch(API_URL + '/debug');
+                const result = await response.json();
+                
+                log('✅ Debug successful!');
+                log('📊 Environment: ' + JSON.stringify(result.environment, null, 2));
+                
+                document.getElementById('debugResult').innerHTML = 
+                    '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+                    
+            } catch (error) {
+                log('❌ Debug error: ' + error.message);
+                document.getElementById('debugResult').innerHTML = 
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        async function testAI() {
+            log('🤖 Testing AI endpoint (no upload)...');
+            
+            try {
+                const response = await fetch(API_URL + '/test-ai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    log('✅ AI test successful!');
+                    log('📄 AI output length: ' + result.output.length);
+                } else {
+                    log('❌ AI test failed: ' + result.error);
+                }
+                
+                document.getElementById('debugResult').innerHTML = 
+                    '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+                    
+            } catch (error) {
+                log('❌ AI test error: ' + error.message);
+                document.getElementById('debugResult').innerHTML = 
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            }
+        }
+
+        // Initialize
+        log('🚀 LegalEase API Test Page Loaded');
+        log('🌐 API URL: ' + API_URL);
+    </script>
+</body>
+</html>

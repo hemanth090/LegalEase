@@ -97,6 +97,46 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'LegalEase API is running' });
 });
 
+// Debug endpoint to check environment
+app.get('/debug', (req, res) => {
+  res.json({
+    status: 'OK',
+    environment: {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT,
+      GROQ_API_KEY_EXISTS: !!process.env.GROQ_API_KEY,
+      GROQ_API_KEY_VALUE: process.env.GROQ_API_KEY ? process.env.GROQ_API_KEY.substring(0, 10) + '...' : 'undefined'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Simple test endpoint for AI without file upload
+app.post('/test-ai', async (req, res) => {
+  try {
+    console.log('🧪 Test AI endpoint called');
+    const testText = "This is a simple legal agreement between two parties.";
+    
+    console.log('🤖 Testing AI simplification...');
+    const { simplifyLegalText } = await import('./services/aiService.js');
+    const result = await simplifyLegalText(testText);
+    
+    console.log('✅ AI test successful, result length:', result.length);
+    res.json({
+      success: true,
+      input: testText,
+      output: result,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ AI test error:', error);
+    res.status(500).json({
+      error: 'AI test failed: ' + error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Upload file
 app.post('/upload', upload.single('file'), async (req, res) => {
   try {
