@@ -2,12 +2,12 @@
 
 ![image url](https://github.com/hemanth090/LegalEase/blob/main/finalImg%20(1).png?raw=true)
 
-LegalEase is a powerful web application that transforms complex legal documents into clear, understandable explanations in over 80+ languages. No legal expertise required!
+LegalEase is a powerful web application that transforms complex legal documents into clear, understandable explanations in over 75+ languages. No legal expertise required!
 
 ## 🌟 Features
 
 - **Multi-format Document Support**: Upload PDF, DOCX, and image files
-- **80+ Languages**: Get explanations in your preferred language
+- **75+ Languages**: Get explanations in your preferred language
 - **AI-Powered Analysis**: Advanced document processing using Groq AI
 - **OCR Technology**: Extract text from scanned documents and images
 - **Beautiful UI**: Modern, responsive design with glass morphism effects
@@ -152,7 +152,7 @@ LegalStick/
 
 ## 🌍 Supported Languages
 
-LegalEase supports 80+ languages organized by regions:
+LegalEase supports 75+ languages organized by regions:
 
 ### Global Languages
 English, Chinese (Simplified/Traditional), Spanish, French, Arabic, Portuguese, Russian, Japanese, German
