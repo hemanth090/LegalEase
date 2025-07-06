@@ -1,6 +1,6 @@
 # LegalEase - Legal Document Simplifier
 
-![image url](https://github.com/hemanth090/LegalEase/blob/main/finalImg%20(1).png?raw=true)
+![image url](https://github.com/hemanth090/LegalEase/blob/main/finalImg%20(1).jpg?raw=true)
 
 LegalEase is a powerful web application that transforms complex legal documents into clear, understandable explanations in over 75+ languages. No legal expertise required!
 
